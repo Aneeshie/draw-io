@@ -115,9 +115,14 @@ export default function Canvas() {
         redraw()
     }
 
+    const clear = () => {
+        strokeRef.current = [];
+        redraw()
+    }
+
     return (
         <>
-            <Toolbar undo={undo} />
+            <Toolbar undo={undo} clear={clear} />
             <canvas
                 ref={canvasRef}
                 className="block bg-white"
