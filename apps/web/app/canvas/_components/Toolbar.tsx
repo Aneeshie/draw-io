@@ -8,9 +8,10 @@ type ToolbarFunctions = {
     undo: () => void
     clear: () => void
     setTool: (tool: Tool) => void
+    redo: () => void
 }
 
-const Toolbar = ({ undo, clear, setTool }: ToolbarFunctions) => {
+const Toolbar = ({ undo, clear, setTool, redo }: ToolbarFunctions) => {
     const [selectedTool, setSelectedTool] = useState<Tool>("pen")
 
     const setToolState = (tool: Tool) => {
@@ -33,6 +34,7 @@ const Toolbar = ({ undo, clear, setTool }: ToolbarFunctions) => {
                 )}>Eraser</Button>
                 <Button variant="outline" onClick={undo}>Undo</Button>
                 <Button variant="destructive" onClick={clear}>Clear</Button>
+                <Button variant="outline" onClick={redo}>Redo</Button>
             </div>
         </div>
     );

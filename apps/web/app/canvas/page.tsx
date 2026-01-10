@@ -21,6 +21,8 @@ export default function Canvas() {
     const strokeRef = useRef<Stroke[]>([]);
     const currentStrokeRef = useRef<Point[]>([])
     const currentToolRef = useRef<Tool>("pen")
+    const redoStackRef = useRef<Stroke[]>([])
+
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -127,8 +129,22 @@ export default function Canvas() {
     }
 
     const undo = () => {
-        strokeRef.current.pop();
+        if (currentStrokeRef.current.length === 0) return
+
+        const lastStroke = strokeRef.current.pop();
+        redoStackRef.current.push(lastStroke!)
+
         redraw()
+    }
+
+    const redo = () => {
+        if (redoStackRef.current.length === 0) return;
+
+        const stroke = redoStackRef.current.pop()!;
+        strokeRef.current.push(stroke)
+
+        redraw();
+
     }
 
     const clear = () => {
@@ -138,7 +154,7 @@ export default function Canvas() {
 
     return (
         <>
-            <Toolbar undo={undo} clear={clear} setTool={setTool} />
+            <Toolbar undo={undo} clear={clear} setTool={setTool} redo={redo} />
             <canvas
                 ref={canvasRef}
                 className="block bg-white"
