@@ -100,11 +100,17 @@ export default function Canvas() {
     const stopDrawing = () => {
         isDrawing.current = false;
 
+        if (currentStrokeRef.current.length < 2) return;
+
         strokeRef.current.push({
             points: currentStrokeRef.current,
             color: "black",
             thickness: 3
         })
+
+        redoStackRef.current = [];
+
+        redraw()
     };
 
     const redraw = () => {
