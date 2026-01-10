@@ -12,6 +12,7 @@ type Stroke = {
     points: Point[],
     color: string,
     thickness: number
+    tool: Tool
 }
 
 export type Tool = "pen" | "eraser"
@@ -105,7 +106,8 @@ export default function Canvas() {
         strokeRef.current.push({
             points: currentStrokeRef.current,
             color: "black",
-            thickness: 3
+            thickness: 3,
+            tool: currentToolRef.current
         })
 
         redoStackRef.current = [];
@@ -120,22 +122,27 @@ export default function Canvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         for (const stroke of strokeRef.current) {
             ctx.beginPath();
-            ctx.strokeStyle = stroke.color
-            ctx.lineWidth = stroke.thickness
 
-
-            ctx.moveTo(stroke.points[0].x, stroke.points[0].y)
-
-            for (const p of stroke.points) {
-                ctx.lineTo(p.x, p.y)
+            if (stroke.tool === "pen") {
+                ctx.globalCompositeOperation = "source-over";
+                ctx.strokeStyle = stroke.color;
+            } else {
+                ctx.globalCompositeOperation = "destination-out";
             }
 
-            ctx.stroke()
+            ctx.lineWidth = stroke.thickness;
+            ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+
+            for (const p of stroke.points) {
+                ctx.lineTo(p.x, p.y);
+            }
+
+            ctx.stroke();
         }
     }
 
     const undo = () => {
-        if (currentStrokeRef.current.length === 0) return
+        if (strokeRef.current.length === 0) return
 
         const lastStroke = strokeRef.current.pop();
         redoStackRef.current.push(lastStroke!)
@@ -154,7 +161,11 @@ export default function Canvas() {
     }
 
     const clear = () => {
-        strokeRef.current = [];
+        if (strokeRef.current.length === 0) return;
+
+        redoStackRef.current = []
+        strokeRef.current = []
+
         redraw()
     }
 
