@@ -14,13 +14,21 @@ type Stroke = {
     thickness: number
 }
 
+export type Tool = "pen" | "eraser"
+
+
 export default function Canvas() {
     const strokeRef = useRef<Stroke[]>([]);
     const currentStrokeRef = useRef<Point[]>([])
+    const currentToolRef = useRef<Tool>("pen")
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
     const isDrawing = useRef(false);
+
+    const setTool = (tool: Tool) => {
+        currentToolRef.current = tool
+    }
 
     useEffect(() => {
         const canvas = canvasRef.current!;
@@ -75,7 +83,15 @@ export default function Canvas() {
 
         currentStrokeRef.current.push({ x, y })
 
-        ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+        if (currentToolRef.current === "pen") {
+            ctx.globalCompositeOperation = "source-over";
+        }
+
+        if (currentToolRef.current === "eraser") {
+            ctx.globalCompositeOperation = "destination-out";
+        }
+
+        ctx.lineTo(x, y);
         ctx.stroke();
     };
 
@@ -122,7 +138,7 @@ export default function Canvas() {
 
     return (
         <>
-            <Toolbar undo={undo} clear={clear} />
+            <Toolbar undo={undo} clear={clear} setTool={setTool} />
             <canvas
                 ref={canvasRef}
                 className="block bg-white"
