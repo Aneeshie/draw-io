@@ -1,0 +1,35 @@
+User {
+  id
+  email
+  created_at
+  updated_at
+}
+
+Room {
+  id
+  room_name
+  owner_id        -- FK → User.id
+  created_at
+  updated_at
+}
+
+User_Room {
+  user_id         -- FK → User.id
+  room_id         -- FK → Room.id
+  joined_at
+}
+
+Stroke {
+  id
+  room_id         -- FK → Room.id
+  user_id         -- FK → User.id
+
+  points          -- array / JSON [{x, y}, ...]
+  color
+  thickness
+  tool            -- "pen" | "eraser"
+
+  created_at
+}
+
+
