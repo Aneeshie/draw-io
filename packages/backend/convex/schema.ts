@@ -26,14 +26,12 @@ export default defineSchema({
     strokes: defineTable({
         roomId: v.id("rooms"),
         userId: v.id("users"),
-
         points: v.array(
             v.object({
                 x: v.number(),
                 y: v.number(),
             })
         ),
-
         color: v.string(),
         thickness: v.number(),
         tool: v.union(v.literal("pen"), v.literal("eraser")),

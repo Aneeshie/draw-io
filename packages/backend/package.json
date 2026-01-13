@@ -1,16 +1,9 @@
 {
-  "name": "backend",
-  "module": "index.ts",
+  "name": "@repo/backend",
   "type": "module",
   "private": true,
   "devDependencies": {
     "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "exports": {
-    "@repo/db": "workspace:*"
   },
   "dependencies": {
     "@convex-dev/better-auth": "^0.10.9",
